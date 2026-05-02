@@ -11,5 +11,12 @@ namespace Tarea3_GestionEmpleados_C34106.Data
         }
 
         public DbSet<Empleado> Empleados { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Empleado>()
+                .Property(e => e.Salario)
+                .HasPrecision(18, 2);
+        }
     }
 }
