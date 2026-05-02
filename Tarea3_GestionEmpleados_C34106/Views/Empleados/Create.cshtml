@@ -1,5 +1,56 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Tarea3_GestionEmpleados_C34106.Models.Empleado
+
 @{
+    ViewData["Title"] = "Registrar Empleado";
+}
+
+<div class="container mt-4">
+    <h2>Registrar Empleado</h2>
+
+    <form asp-action="Create" method="post" class="mt-3">
+
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Apellidos" class="form-label"></label>
+            <input asp-for="Apellidos" class="form-control" />
+            <span asp-validation-for="Apellidos" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Departamento" class="form-label"></label>
+            <input asp-for="Departamento" class="form-control" />
+            <span asp-validation-for="Departamento" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Salario" class="form-label"></label>
+            <input asp-for="Salario" class="form-control" type="number" step="0.01" />
+            <span asp-validation-for="Salario" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FechaIngreso" class="form-label"></label>
+            <input asp-for="FechaIngreso" class="form-control" type="date" />
+            <span asp-validation-for="FechaIngreso" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-3">
+            <input asp-for="Activo" class="form-check-input" />
+            <label asp-for="Activo" class="form-check-label"></label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

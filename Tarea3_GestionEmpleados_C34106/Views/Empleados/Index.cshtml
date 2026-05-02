@@ -1,5 +1,135 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<Tarea3_GestionEmpleados_C34106.Models.Empleado>
+
 @{
+    ViewData["Title"] = "Gestión de Empleados";
+
+    string busqueda = ViewBag.Busqueda as string ?? "";
+    int paginaActual = ViewBag.PaginaActual ?? 1;
+    int totalPaginas = ViewBag.TotalPaginas ?? 1;
+    int totalRegistros = ViewBag.TotalRegistros ?? 0;
 }
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Gestión de Empleados</h2>
+        <a asp-action="Create" class="btn btn-primary">Nuevo Empleado</a>
+    </div>
+
+    <form asp-action="Index" method="get" class="row mb-3">
+        <div class="col-md-8">
+            <input type="text"
+                   name="busqueda"
+                   value="@busqueda"
+                   class="form-control"
+                   placeholder="Buscar por nombre, apellidos o departamento" />
+        </div>
+
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-success">Buscar</button>
+            <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+
+    <p>
+        <strong>Total encontrados:</strong> @totalRegistros
+    </p>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No hay empleados registrados.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre completo</th>
+                    <th>Departamento</th>
+                    <th>Salario</th>
+                    <th>Fecha ingreso</th>
+                    <th>Estado</th>
+                    <th style="width: 230px;">Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var empleado in Model)
+                {
+                    <tr>
+                        <td>@empleado.Id</td>
+                        <td>@empleado.NombreCompleto</td>
+                        <td>@empleado.Departamento</td>
+                        <td>₡@empleado.Salario.ToString("N2")</td>
+                        <td>@empleado.FechaIngreso.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (empleado.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Dado de Baja</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Edit"
+                                   asp-route-id="@empleado.Id"
+                                   class="btn btn-warning btn-sm">
+                                Editar
+                            </a>
+
+                            <form asp-action="ToggleActivo"
+                                  asp-route-id="@empleado.Id"
+                                  method="post"
+                                  style="display:inline;">
+                                <button type="submit"
+                                        class="btn btn-sm @(empleado.Activo ? "btn-danger" : "btn-success")">
+                                    @(empleado.Activo ? "Dar de Baja" : "Activar")
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+                Página @paginaActual de @totalPaginas
+            </div>
+
+            <div>
+                @if (paginaActual > 1)
+                {
+                    <a asp-action="Index"
+                           asp-route-busqueda="@busqueda"
+                           asp-route-pagina="@(paginaActual - 1)"
+                           class="btn btn-outline-primary">
+                        Anterior
+                    </a>
+                }
+                else
+                {
+                    <button class="btn btn-outline-secondary" disabled>Anterior</button>
+                }
+
+                @if (paginaActual < totalPaginas)
+                {
+                    <a asp-action="Index"
+                           asp-route-busqueda="@busqueda"
+                           asp-route-pagina="@(paginaActual + 1)"
+                           class="btn btn-outline-primary">
+                        Siguiente
+                    </a>
+                }
+                else
+                {
+                    <button class="btn btn-outline-secondary" disabled>Siguiente</button>
+                }
+            </div>
+        </div>
+    }
+</div>
